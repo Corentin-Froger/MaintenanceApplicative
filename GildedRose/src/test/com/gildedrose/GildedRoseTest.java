@@ -128,16 +128,31 @@ class GildedRoseTest {
     }
 
     /**
-     * Les éléments "Conjured" voient leur qualité se dégrader de deux fois plus vite que les objets normaux.
-     * Vous pouvez faire les changements que vous voulez à la méthode updateQuality et ajouter autant de code que
-     * vous voulez, tant que tout fonctionne correctement. Cependant, nous devons vous prévenir, vous ne devez en aucun
-     * cas modifier la classe Item ou ses propriétés, car cette classe appartient au gobelin à l'étage qui entrerait
-     * dans une rage instantanée et vous tuerait sans délai : il ne croit pas au partage du code.
-     * (Vous pouvez rendre la méthode updateQuality statique,
-     * ainsi que des propriétés dans la classe Item si vous voulez, nous vous couvrirons)
-     * <p>
-     * Un produit ne peut jamais voir sa qualité augmenter au-dessus de 50, cependant "Sulfuras" est un objet légendaire
-     * et comme tel sa qualité est de 80 et elle ne change jamais.
+     * Les éléments "Conjured" voient leur qualité se dégrader deux fois plus vite que les objets normaux.
      */
+    @Test
+    void sellInAvantApresConjured() {
+        Item[] items = new Item[]{new ConjuredItem("foo", 1, 20)};
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(18, app.items[0].quality);
+        app.updateQuality();
+        assertEquals(14, app.items[0].quality);
+    }
 
+    @Test
+    void qualityPasNegativeConjured() {
+        Item[] items = new Item[]{new ConjuredItem("foo", 0, 0)};
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(0, app.items[0].quality);
+    }
+
+    @Test
+    void qualityJamaisSuperieureA50Conjured() {
+        Item[] items = new Item[]{new ConjuredItem("foo", 0, 50)};
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(46, app.items[0].quality);
+    }
 }

@@ -2,13 +2,10 @@ package com.gildedrose;
 
 import org.junit.jupiter.api.Test;
 
+import static com.gildedrose.Const.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GildedRoseTest {
-
-    private final String BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert";
-    private final String AGED_BRIE = "Aged Brie";
-    private final String SULFURAS = "Sulfuras, Hand of Ragnaros";
 
     @Test
     void foo() {

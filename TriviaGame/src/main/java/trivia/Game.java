@@ -6,8 +6,27 @@ import java.util.LinkedList;
 import java.util.List;
 
 // REFACTOR ME
+// TODO
+/*
+- Il doit y avoir au moins 2 joueurs pour démarrer la partie
+- La partie ne doit pas commencer tant que tous les joueurs n'ont pas été ajoutés.
+  En d'autres termes, de nouveaux joueurs ne peuvent pas rejoindre après le début du jeu
+
+[DIFFICILE]
+- Après une réponse incorrecte, un joueur ne va en prison que s'il échoue à répondre à une
+  deuxième question dans la même catégorie. Autrement dit, il/elle se voit offrir une
+  « seconde chance » dans la même catégorie.
+- Charger les questions à partir de 4 fichiers de propriétés : rock.properties, sports.properties...
+- Une série (streak) est une séquence consécutive de réponses correctes pour un joueur donné.
+  Après avoir donné 3 réponses correctes consécutives, un joueur gagne 2 points pour chaque
+  réponse correcte suivante. Lorsqu'un joueur donne une réponse incorrecte : (a) s'il/elle était
+  en série, la série se termine OU (b) s'il n'y avait pas de série, le joueur va en prison.
+  (En d'autres termes, avec une série active, un joueur ne va pas en prison, mais perd sa série).
+  De plus, la partie doit être remportée avec un double de points.
+*/
 public class Game implements IGame {
     List<Player> players = new ArrayList<>();
+    public final int MAX_PLAYERS = 6;
 
     private final HashMap<Category, LinkedList<String>> questions;
 
@@ -38,16 +57,30 @@ public class Game implements IGame {
     }
 
     public boolean add(String playerName) {
-        Player player = new Player(playerName);
-        players.add(player);
+        // Check max player count
+        if (howManyPlayers() < MAX_PLAYERS) {
+            // Check if player already exists
+            for (Player player : players) {
+                if (player.toString().equals(playerName)) {
+                    System.out.println(playerName + " is already played");
+                    return false;
+                }
+            }
 
-        System.out.println(playerName + " was added");
-        System.out.println("They are player number " + players.size());
+            Player player = new Player(playerName);
+            players.add(player);
 
-        if (currentPlayer == null) {
-            currentPlayer = players.getFirst();
+            System.out.println(playerName + " was added");
+            System.out.println("They are player number " + players.size());
+
+            if (currentPlayer == null) {
+                currentPlayer = players.getFirst();
+            }
+            return true;
         }
-        return true;
+
+        System.out.println("Too many players (" + howManyPlayers() + " / " + MAX_PLAYERS + ")");
+        return false;
     }
 
     public int howManyPlayers() {

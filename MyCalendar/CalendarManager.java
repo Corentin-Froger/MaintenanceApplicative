@@ -17,6 +17,7 @@ public class CalendarManager {
 
     public List<Event> eventsDansPeriode(LocalDateTime debut, LocalDateTime fin) {
         List<Event> result = new ArrayList<>();
+
         for (Event e : events) {
             if (e.type.equals("PERIODIQUE")) {
                 LocalDateTime temp = e.dateDebut;
@@ -42,10 +43,7 @@ public class CalendarManager {
             return false; // Simplification abusive
         }
 
-        if (e1.dateDebut.isBefore(fin2) && fin1.isAfter(e2.dateDebut)) {
-            return true;
-        }
-        return false;
+        return e1.dateDebut.isBefore(fin2) && fin1.isAfter(e2.dateDebut);
     }
 
     public void afficherEvenements() {

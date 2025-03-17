@@ -11,12 +11,11 @@ public class Main {
         String utilisateur = null;
         boolean continuer = true;
 
-        String utilisateurs[] = new String[99];
-        String motsDePasses[] = new String[99];
+        String[] utilisateurs = new String[99];
+        String[] motsDePasses = new String[99];
         int nbUtilisateurs = 0;
 
         while (true) {
-
             if (utilisateur == null) {
                 System.out.println("  _____         _                   _                __  __");
                 System.out.println(" / ____|       | |                 | |              |  \\/  |");
@@ -58,6 +57,8 @@ public class Main {
                                 String motDePasse = scanner.nextLine();
 
                                 for (int i = 0; i < nbUtilisateurs; i = i + 1) {
+                                    assert utilisateurs[i] != null;
+
                                     if (utilisateurs[i].equals(utilisateur) && motsDePasses[i].equals(motDePasse)) {
                                         utilisateur = utilisateurs[i];
                                     }
@@ -72,6 +73,7 @@ public class Main {
                         System.out.print("Mot de passe: ");
                         String motDePasse = scanner.nextLine();
                         System.out.print("Répéter mot de passe: ");
+
                         if (scanner.nextLine().equals(motDePasse)) {
                             utilisateurs[nbUtilisateurs] = utilisateur;
                             motsDePasses[nbUtilisateurs] = motDePasse;
@@ -112,7 +114,6 @@ public class Main {
                             case "1":
                                 calendar.afficherEvenements();
                                 break;
-
                             case "2":
                                 System.out.print("Entrez l'année (AAAA) : ");
                                 int anneeMois = Integer.parseInt(scanner.nextLine());
@@ -124,7 +125,6 @@ public class Main {
 
                                 afficherListe(calendar.eventsDansPeriode(debutMois, finMois));
                                 break;
-
                             case "3":
                                 System.out.print("Entrez l'année (AAAA) : ");
                                 int anneeSemaine = Integer.parseInt(scanner.nextLine());
@@ -140,7 +140,6 @@ public class Main {
 
                                 afficherListe(calendar.eventsDansPeriode(debutSemaine, finSemaine));
                                 break;
-
                             case "4":
                                 System.out.print("Entrez l'année (AAAA) : ");
                                 int anneeJour = Integer.parseInt(scanner.nextLine());
@@ -199,25 +198,23 @@ public class Main {
                         int duree2 = Integer.parseInt(scanner.nextLine());
                         System.out.println("Lieu :");
                         String lieu = scanner.nextLine();
-                        
-                        String participants = utilisateur;
-                        
-                        boolean encore = true;
+
+                        StringBuilder participants = new StringBuilder(utilisateur);
+
                         System.out.println("Ajouter un participant ? (oui / non)");
-                        while (scanner.nextLine().equals("oui"))
-                        {
+                        while (scanner.nextLine().equals("oui")) {
                             System.out.print("Participants : " + participants);
-                            participants += ", " + scanner.nextLine();
+                            participants.append(", ").append(scanner.nextLine());
                         }
 
                         calendar.ajouterEvent("REUNION", titre2, utilisateur,
                                 LocalDateTime.of(annee2, moisRdv2, jourRdv2, heure2, minute2), duree2,
-                                lieu, participants, 0);
+                                lieu, participants.toString(), 0);
 
                         System.out.println("Événement ajouté.");
                         break;
 
-                        case "4":
+                    case "4":
                         // Ajout simplifié d'une réunion
                         System.out.print("Titre de l'événement : ");
                         String titre3 = scanner.nextLine();
@@ -240,11 +237,9 @@ public class Main {
 
                         System.out.println("Événement ajouté.");
                         break;
-
                     default:
                         System.out.println("Déconnexion ! Voulez-vous continuer ? (O/N)");
                         continuer = scanner.nextLine().trim().equalsIgnoreCase("oui");
-
                         utilisateur = null;
                 }
             }

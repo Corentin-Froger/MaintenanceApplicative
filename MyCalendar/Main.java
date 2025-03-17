@@ -17,20 +17,7 @@ public class Main {
 
         while (true) {
             if (utilisateur == null) {
-                System.out.println("  _____         _                   _                __  __");
-                System.out.println(" / ____|       | |                 | |              |  \\/  |");
-                System.out.println(
-                        "| |       __ _ | |  ___  _ __    __| |  __ _  _ __  | \\  / |  __ _  _ __    __ _   __ _   ___  _ __");
-                System.out.println(
-                        "| |      / _` || | / _ \\| '_ \\  / _` | / _` || '__| | |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '__|");
-                System.out.println(
-                        "| |____ | (_| || ||  __/| | | || (_| || (_| || |    | |  | || (_| || | | || (_| || (_| ||  __/| |");
-                System.out.println(
-                        " \\_____| \\__,_||_| \\___||_| |_| \\__,_| \\__,_||_|    |_|  |_| \\__,_||_| |_| \\__,_| \\__, | \\___||_|");
-                System.out.println(
-                        "                                                                                   __/ |");
-                System.out.println(
-                        "                                                                                  |___/");
+                System.out.println(Constantes.ART);
 
                 System.out.println("1 - Se connecter");
                 System.out.println("2 - Créer un compte");
@@ -66,7 +53,6 @@ public class Main {
                             }
                         }
                         break;
-
                     case "2":
                         System.out.print("Nom d'utilisateur: ");
                         utilisateur = scanner.nextLine();
@@ -173,7 +159,7 @@ public class Main {
                         System.out.print("Durée (en minutes) : ");
                         int duree = Integer.parseInt(scanner.nextLine());
 
-                        calendar.ajouterEvent("RDV_PERSONNEL", titre, utilisateur,
+                        calendar.ajouterEvent(Constantes.RDV_PERSONNEL, titre, utilisateur,
                                 LocalDateTime.of(annee, moisRdv, jourRdv, heure, minute), duree,
                                 "", "", 0);
 
@@ -202,18 +188,18 @@ public class Main {
                         StringBuilder participants = new StringBuilder(utilisateur);
 
                         System.out.println("Ajouter un participant ? (oui / non)");
+
                         while (scanner.nextLine().equals("oui")) {
                             System.out.print("Participants : " + participants);
                             participants.append(", ").append(scanner.nextLine());
                         }
 
-                        calendar.ajouterEvent("REUNION", titre2, utilisateur,
+                        calendar.ajouterEvent(Constantes.REUNION, titre2, utilisateur,
                                 LocalDateTime.of(annee2, moisRdv2, jourRdv2, heure2, minute2), duree2,
                                 lieu, participants.toString(), 0);
 
                         System.out.println("Événement ajouté.");
                         break;
-
                     case "4":
                         // Ajout simplifié d'une réunion
                         System.out.print("Titre de l'événement : ");
@@ -231,7 +217,7 @@ public class Main {
                         System.out.print("Frequence (en jours) : ");
                         int frequence = Integer.parseInt(scanner.nextLine());
 
-                        calendar.ajouterEvent("PERIODIQUE", titre3, utilisateur,
+                        calendar.ajouterEvent(Constantes.PERIODIQUE, titre3, utilisateur,
                                 LocalDateTime.of(annee3, moisRdv3, jourRdv3, heure3, minute3), 0,
                                 "", "", frequence);
 

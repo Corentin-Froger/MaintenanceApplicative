@@ -19,8 +19,9 @@ public class CalendarManager {
         List<Event> result = new ArrayList<>();
 
         for (Event e : events) {
-            if (e.type.equals("PERIODIQUE")) {
+            if (e.type.equals(Constantes.PERIODIQUE)) {
                 LocalDateTime temp = e.dateDebut;
+
                 while (temp.isBefore(fin)) {
                     if (!temp.isBefore(debut)) {
                         result.add(e);
@@ -39,7 +40,7 @@ public class CalendarManager {
         LocalDateTime fin1 = e1.dateDebut.plusMinutes(e1.dureeMinutes);
         LocalDateTime fin2 = e2.dateDebut.plusMinutes(e2.dureeMinutes);
 
-        if (e1.type.equals("PERIODIQUE") || e2.type.equals("PERIODIQUE")) {
+        if (e1.type.equals(Constantes.PERIODIQUE) || e2.type.equals(Constantes.PERIODIQUE)) {
             return false; // Simplification abusive
         }
 

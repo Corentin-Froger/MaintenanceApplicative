@@ -1,11 +1,11 @@
-package evenement.types;
+package evenement.type;
 
 import evenement.Event;
-import evenement.valueObjects.DureeEvenement;
-import evenement.valueObjects.ProprietaireEvenement;
-import evenement.valueObjects.TitreEvenement;
-import evenement.valueObjects.TypeEvenement;
-import evenement.valueObjects.periodique.FrequenceEvenement;
+import evenement.valueObject.DureeEvenement;
+import evenement.valueObject.ProprietaireEvenement;
+import evenement.valueObject.TitreEvenement;
+import evenement.valueObject.TypeEvenement;
+import evenement.valueObject.periodique.FrequenceEvenement;
 
 import java.time.LocalDateTime;
 

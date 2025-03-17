@@ -1,4 +1,4 @@
-package evenement.valueObjects;
+package evenement.valueObject;
 
 public enum TypeEvenement {
     PERIODIQUE,

@@ -1,31 +1,51 @@
+package menu;
+
+import evenement.CalendarManager;
 import evenement.Event;
-import evenement.types.EventPeriodique;
-import evenement.types.EventRendezVous;
-import evenement.types.EventReunion;
-import evenement.valueObjects.DureeEvenement;
-import evenement.valueObjects.ProprietaireEvenement;
-import evenement.valueObjects.TitreEvenement;
-import evenement.valueObjects.periodique.FrequenceEvenement;
-import evenement.valueObjects.reunion.LieuEvenement;
-import evenement.valueObjects.reunion.ParticipantsEvenement;
+import evenement.type.EventPeriodique;
+import evenement.type.EventRendezVous;
+import evenement.type.EventReunion;
+import evenement.valueObject.DureeEvenement;
+import evenement.valueObject.ProprietaireEvenement;
+import evenement.valueObject.TitreEvenement;
+import evenement.valueObject.periodique.FrequenceEvenement;
+import evenement.valueObject.reunion.LieuEvenement;
+import evenement.valueObject.reunion.ParticipantsEvenement;
+import menu.actions.ActionConnexion;
+import menu.actions.ActionCreerCompte;
+import utilisateur.Utilisateur;
 
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class Main {
+public class MainMenu {
     private static final String ART = """
               _____         _                   _                __  __
              / ____|       | |                 | |              |  \\/  |
-            | |       __ _ | |  ___  _ __    __| |  __ _  _ __  | \\  / |  __ _  _ __    __ _   __ _   ___  _ __
-            | |      / _` || | / _ \\| '_ \\  / _` | / _` || '__| | |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '__|
-            | |____ | (_| || ||  __/| | | || (_| || (_| || |    | |  | | | (_| || | | || (_| || (_| ||  __/| |
-             \\_____| \\__,_||_| \\___||_| |_| \\__,_| \\__,_||_|    |_|  |_| \\__,_||_| |_| \\__,_| \\__, | \\___||_|
-                                                                                                __/ | |___/""";
+            | |       __ _ | |  ___  _ __    __| |  __ _  _ __  | \\  / |  __ _  _ __    __ _   __ _   ___   _ __
+            | |      / _` || | / _ \\| '_ \\  / _` | / _` || '__| | |\\/| | / _` || '_ \\  / _` | / _` | / _ \\ | '__|
+            | |____ | (_| || ||  __/| | | || (_| || (_| || |    | |  | | | (_| || | | || (_| || (_| || __/ | |
+             \\_____| \\__,_||_| \\___||_| |_| \\__,_| \\__,_||_|    |_|  |_| \\__,_||_| |_| \\__,_| \\__, | \\___| |_|
+                                                                                               __/ |
+                                                                                              |___/""";
+
+    public static final List<MenuAction> listeActions = Arrays.asList(
+            new ActionConnexion(),
+            new ActionCreerCompte()
+    );
 
     // Pour se rappeler des choix
+    public static Utilisateur utilisateur = null;
+    public static Scanner scanner = new Scanner(System.in);
+
+    public static Utilisateur[] utilisateurs = new Utilisateur[99];
+    public static String[] motsDePasses = new String[99];
+    public static int nbUtilisateurs = 0;
+
     private static String titre;
     private static int annee;
     private static int moisRdv;
@@ -33,42 +53,9 @@ public class Main {
     private static int heure;
     private static int minute;
 
-    private static void questionsGeneriques(Scanner scanner) {
-        System.out.print("Titre de l'événement : ");
-        titre = scanner.nextLine();
-        System.out.print("Année (AAAA) : ");
-        annee = Integer.parseInt(scanner.nextLine());
-        System.out.print("Mois (1-12) : ");
-        moisRdv = Integer.parseInt(scanner.nextLine());
-        System.out.print("Jour (1-31) : ");
-        jourRdv = Integer.parseInt(scanner.nextLine());
-        System.out.print("Heure début (0-23) : ");
-        heure = Integer.parseInt(scanner.nextLine());
-        System.out.print("Minute début (0-59) : ");
-        minute = Integer.parseInt(scanner.nextLine());
-    }
-
-    private static void afficherListe(List<Event> evenements) {
-        if (evenements.isEmpty()) {
-            System.out.println("Aucun événement trouvé pour cette période.");
-        } else {
-            System.out.println("Événements trouvés : ");
-
-            for (Event e : evenements) {
-                System.out.println("- " + e.description());
-            }
-        }
-    }
-
     public static void main(String[] args) {
         CalendarManager calendar = new CalendarManager();
-        Scanner scanner = new Scanner(System.in);
-        String utilisateur = null;
         boolean continuer = true;
-
-        String[] utilisateurs = new String[99];
-        String[] motsDePasses = new String[99];
-        int nbUtilisateurs = 0;
 
         while (true) {
             if (utilisateur == null) {
@@ -77,58 +64,11 @@ public class Main {
                 System.out.println("2 - Créer un compte");
                 System.out.println("Choix : ");
 
-                switch (scanner.nextLine()) {
-                    case "1" -> {
-                        System.out.print("Nom d'utilisateur: ");
-                        utilisateur = scanner.nextLine();
-
-                        // TODO mots de passe des admins en clair...
-                        if (utilisateur.equals("Roger")) {
-                            String motDePasse = scanner.nextLine();
-                            if (!motDePasse.equals("Chat")) {
-                                utilisateur = null;
-                            }
-                        } else {
-                            if (utilisateur.equals("Pierre")) {
-                                String motDePasse = scanner.nextLine();
-                                if (!motDePasse.equals("KiRouhl")) {
-                                    utilisateur = null;
-                                }
-                            } else {
-                                System.out.print("Mot de passe: ");
-                                String motDePasse = scanner.nextLine();
-
-                                for (int i = 0; i < nbUtilisateurs; i++) {
-                                    assert utilisateurs[i] != null;
-
-                                    if (utilisateurs[i].equals(utilisateur) && motsDePasses[i].equals(motDePasse)) {
-                                        utilisateur = utilisateurs[i];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    case "2" -> {
-                        System.out.print("Nom d'utilisateur: ");
-                        utilisateur = scanner.nextLine();
-                        System.out.print("Mot de passe: ");
-                        String motDePasse = scanner.nextLine();
-                        System.out.print("Répéter mot de passe: ");
-
-                        if (scanner.nextLine().equals(motDePasse)) {
-                            utilisateurs[nbUtilisateurs] = utilisateur;
-                            motsDePasses[nbUtilisateurs] = motDePasse;
-                            nbUtilisateurs++;
-                        } else {
-                            System.out.println("Les mots de passes ne correspondent pas...");
-                            utilisateur = null;
-                        }
-                    }
-                }
+                listeActions.get(Integer.parseInt(scanner.nextLine())).lancer();
             }
 
             while (continuer && utilisateur != null) {
-                System.out.println("\nBonjour, " + utilisateur);
+                System.out.println("\nBonjour, " + utilisateur.nom());
                 System.out.println("=== Menu Gestionnaire d'Événements ===");
                 System.out.println("1 - Voir les événements");
                 System.out.println("2 - Ajouter un rendez-vous perso");
@@ -215,7 +155,7 @@ public class Main {
                         System.out.println("Lieu :");
                         String lieu = scanner.nextLine();
 
-                        StringBuilder participants = new StringBuilder(utilisateur);
+                        StringBuilder participants = new StringBuilder(utilisateur.nom());
                         System.out.println("Ajouter un participant ? (oui / non)");
 
                         while (scanner.nextLine().equals("oui")) {
@@ -249,6 +189,33 @@ public class Main {
                         utilisateur = null;
                     }
                 }
+            }
+        }
+    }
+
+    private static void questionsGeneriques(Scanner scanner) {
+        System.out.print("Titre de l'événement : ");
+        titre = scanner.nextLine();
+        System.out.print("Année (AAAA) : ");
+        annee = Integer.parseInt(scanner.nextLine());
+        System.out.print("Mois (1-12) : ");
+        moisRdv = Integer.parseInt(scanner.nextLine());
+        System.out.print("Jour (1-31) : ");
+        jourRdv = Integer.parseInt(scanner.nextLine());
+        System.out.print("Heure début (0-23) : ");
+        heure = Integer.parseInt(scanner.nextLine());
+        System.out.print("Minute début (0-59) : ");
+        minute = Integer.parseInt(scanner.nextLine());
+    }
+
+    private static void afficherListe(List<Event> evenements) {
+        if (evenements.isEmpty()) {
+            System.out.println("Aucun événement trouvé pour cette période.");
+        } else {
+            System.out.println("Événements trouvés : ");
+
+            for (Event e : evenements) {
+                System.out.println("- " + e.description());
             }
         }
     }

@@ -1,3 +1,3 @@
-package evenement.valueObjects.reunion;
+package evenement.valueObject.reunion;
 
 public record LieuEvenement(String lieu) {}

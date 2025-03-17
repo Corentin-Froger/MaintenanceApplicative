@@ -1,20 +1,12 @@
-import evenement.Event;
-import evenement.types.EventPeriodique;
-import evenement.types.EventRendezVous;
-import evenement.types.EventReunion;
-import evenement.valueObjects.DureeEvenement;
-import evenement.valueObjects.ProprietaireEvenement;
-import evenement.valueObjects.TitreEvenement;
-import evenement.valueObjects.TypeEvenement;
-import evenement.valueObjects.periodique.FrequenceEvenement;
-import evenement.valueObjects.reunion.LieuEvenement;
-import evenement.valueObjects.reunion.ParticipantsEvenement;
+package evenement;
+
+import evenement.type.EventPeriodique;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static evenement.valueObjects.TypeEvenement.PERIODIQUE;
+import static evenement.valueObject.TypeEvenement.PERIODIQUE;
 
 public class CalendarManager {
     public List<Event> events;

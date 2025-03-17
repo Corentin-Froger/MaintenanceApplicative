@@ -1,12 +1,12 @@
-package evenement.types;
+package evenement.type;
 
 import evenement.Event;
-import evenement.valueObjects.DureeEvenement;
-import evenement.valueObjects.ProprietaireEvenement;
-import evenement.valueObjects.TitreEvenement;
-import evenement.valueObjects.TypeEvenement;
-import evenement.valueObjects.reunion.LieuEvenement;
-import evenement.valueObjects.reunion.ParticipantsEvenement;
+import evenement.valueObject.DureeEvenement;
+import evenement.valueObject.ProprietaireEvenement;
+import evenement.valueObject.TitreEvenement;
+import evenement.valueObject.TypeEvenement;
+import evenement.valueObject.reunion.LieuEvenement;
+import evenement.valueObject.reunion.ParticipantsEvenement;
 
 import java.time.LocalDateTime;
 

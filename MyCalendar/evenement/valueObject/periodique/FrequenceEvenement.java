@@ -1,3 +1,3 @@
-package evenement.valueObjects.periodique;
+package evenement.valueObject.periodique;
 
 public record FrequenceEvenement(int jours) {}

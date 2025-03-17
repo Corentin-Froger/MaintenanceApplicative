@@ -1,6 +1,20 @@
+import evenement.Event;
+import evenement.types.EventPeriodique;
+import evenement.types.EventRendezVous;
+import evenement.types.EventReunion;
+import evenement.valueObjects.DureeEvenement;
+import evenement.valueObjects.ProprietaireEvenement;
+import evenement.valueObjects.TitreEvenement;
+import evenement.valueObjects.TypeEvenement;
+import evenement.valueObjects.periodique.FrequenceEvenement;
+import evenement.valueObjects.reunion.LieuEvenement;
+import evenement.valueObjects.reunion.ParticipantsEvenement;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static evenement.valueObjects.TypeEvenement.PERIODIQUE;
 
 public class CalendarManager {
     public List<Event> events;
@@ -9,9 +23,15 @@ public class CalendarManager {
         this.events = new ArrayList<>();
     }
 
-    public void ajouterEvent(String type, String title, String proprietaire, LocalDateTime dateDebut, int dureeMinutes,
-                             String lieu, String participants, int frequenceJours) {
-        Event e = new Event(type, title, proprietaire, dateDebut, dureeMinutes, lieu, participants, frequenceJours);
+    // TODO ajouterEvent(Event)
+    public void ajouterEvent(TypeEvenement type, TitreEvenement title, ProprietaireEvenement proprietaire,
+                             LocalDateTime dateDebut, DureeEvenement dureeMinutes, LieuEvenement lieu,
+                             ParticipantsEvenement participants, FrequenceEvenement frequenceJours) {
+        Event e = switch (type) {
+            case PERIODIQUE -> new EventPeriodique(title, proprietaire, dateDebut, dureeMinutes, frequenceJours);
+            case RDV_PERSONNEL -> new EventRendezVous(title, proprietaire, dateDebut, dureeMinutes);
+            case REUNION -> new EventReunion(title, proprietaire, dateDebut, dureeMinutes, lieu, participants);
+        };
         events.add(e);
     }
 
@@ -19,7 +39,7 @@ public class CalendarManager {
         List<Event> result = new ArrayList<>();
 
         for (Event e : events) {
-            if (e.type.equals(Constantes.PERIODIQUE)) {
+            if (e.type.equals(PERIODIQUE)) {
                 LocalDateTime temp = e.dateDebut;
 
                 while (temp.isBefore(fin)) {
@@ -27,7 +47,8 @@ public class CalendarManager {
                         result.add(e);
                         break;
                     }
-                    temp = temp.plusDays(e.frequenceJours);
+                    EventPeriodique e1 = (EventPeriodique) e; // TODO c'est nul les cast
+                    temp = temp.plusDays(e1.frequenceJours.jours());
                 }
             } else if (!e.dateDebut.isBefore(debut) && !e.dateDebut.isAfter(fin)) {
                 result.add(e);
@@ -36,11 +57,12 @@ public class CalendarManager {
         return result;
     }
 
+    // TODO enlever ?
     public boolean conflit(Event e1, Event e2) {
-        LocalDateTime fin1 = e1.dateDebut.plusMinutes(e1.dureeMinutes);
-        LocalDateTime fin2 = e2.dateDebut.plusMinutes(e2.dureeMinutes);
+        LocalDateTime fin1 = e1.dateDebut.plusMinutes(e1.dureeMinutes.duree());
+        LocalDateTime fin2 = e2.dateDebut.plusMinutes(e2.dureeMinutes.duree());
 
-        if (e1.type.equals(Constantes.PERIODIQUE) || e2.type.equals(Constantes.PERIODIQUE)) {
+        if (e1.type.equals(PERIODIQUE) || e2.type.equals(PERIODIQUE)) {
             return false; // Simplification abusive
         }
 

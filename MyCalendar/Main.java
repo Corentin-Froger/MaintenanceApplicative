@@ -1,10 +1,29 @@
+import evenement.Event;
+import evenement.valueObjects.DureeEvenement;
+import evenement.valueObjects.ProprietaireEvenement;
+import evenement.valueObjects.TitreEvenement;
+import evenement.valueObjects.periodique.FrequenceEvenement;
+import evenement.valueObjects.reunion.LieuEvenement;
+import evenement.valueObjects.reunion.ParticipantsEvenement;
+
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+import static evenement.valueObjects.TypeEvenement.*;
+
 public class Main {
+    private static final String ART = """
+              _____         _                   _                __  __
+             / ____|       | |                 | |              |  \\/  |
+            | |       __ _ | |  ___  _ __    __| |  __ _  _ __  | \\  / |  __ _  _ __    __ _   __ _   ___  _ __
+            | |      / _` || | / _ \\| '_ \\  / _` | / _` || '__| | |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '__|
+            | |____ | (_| || ||  __/| | | || (_| || (_| || |    | |  | | | (_| || | | || (_| || (_| ||  __/| |
+             \\_____| \\__,_||_| \\___||_| |_| \\__,_| \\__,_||_|    |_|  |_| \\__,_||_| |_| \\__,_| \\__, | \\___||_|
+                                                                                                __/ | |___/""";
+
     public static void main(String[] args) {
         CalendarManager calendar = new CalendarManager();
         Scanner scanner = new Scanner(System.in);
@@ -17,8 +36,7 @@ public class Main {
 
         while (true) {
             if (utilisateur == null) {
-                System.out.println(Constantes.ART);
-
+                System.out.println(ART);
                 System.out.println("1 - Se connecter");
                 System.out.println("2 - Créer un compte");
                 System.out.println("Choix : ");
@@ -28,6 +46,7 @@ public class Main {
                         System.out.print("Nom d'utilisateur: ");
                         utilisateur = scanner.nextLine();
 
+                        // TODO mots de passe des admins en clair...
                         if (utilisateur.equals("Roger")) {
                             String motDePasse = scanner.nextLine();
                             if (!motDePasse.equals("Chat")) {
@@ -43,7 +62,7 @@ public class Main {
                                 System.out.print("Mot de passe: ");
                                 String motDePasse = scanner.nextLine();
 
-                                for (int i = 0; i < nbUtilisateurs; i = i + 1) {
+                                for (int i = 0; i < nbUtilisateurs; i++) {
                                     assert utilisateurs[i] != null;
 
                                     if (utilisateurs[i].equals(utilisateur) && motsDePasses[i].equals(motDePasse)) {
@@ -63,7 +82,7 @@ public class Main {
                         if (scanner.nextLine().equals(motDePasse)) {
                             utilisateurs[nbUtilisateurs] = utilisateur;
                             motsDePasses[nbUtilisateurs] = motDePasse;
-                            nbUtilisateurs = nbUtilisateurs + 1;
+                            nbUtilisateurs++;
                         } else {
                             System.out.println("Les mots de passes ne correspondent pas...");
                             utilisateur = null;
@@ -159,9 +178,9 @@ public class Main {
                         System.out.print("Durée (en minutes) : ");
                         int duree = Integer.parseInt(scanner.nextLine());
 
-                        calendar.ajouterEvent(Constantes.RDV_PERSONNEL, titre, utilisateur,
-                                LocalDateTime.of(annee, moisRdv, jourRdv, heure, minute), duree,
-                                "", "", 0);
+                        calendar.ajouterEvent(RDV_PERSONNEL, new TitreEvenement(titre), new ProprietaireEvenement(utilisateur),
+                                LocalDateTime.of(annee, moisRdv, jourRdv, heure, minute), new DureeEvenement(duree),
+                                new LieuEvenement(""), new ParticipantsEvenement(""), new FrequenceEvenement(0));
 
                         System.out.println("Événement ajouté.");
                         break;
@@ -194,9 +213,9 @@ public class Main {
                             participants.append(", ").append(scanner.nextLine());
                         }
 
-                        calendar.ajouterEvent(Constantes.REUNION, titre2, utilisateur,
-                                LocalDateTime.of(annee2, moisRdv2, jourRdv2, heure2, minute2), duree2,
-                                lieu, participants.toString(), 0);
+                        calendar.ajouterEvent(REUNION, new TitreEvenement(titre2), new ProprietaireEvenement(utilisateur),
+                                LocalDateTime.of(annee2, moisRdv2, jourRdv2, heure2, minute2), new DureeEvenement(duree2),
+                                new LieuEvenement(lieu), new ParticipantsEvenement(participants.toString()), new FrequenceEvenement(0));
 
                         System.out.println("Événement ajouté.");
                         break;
@@ -217,9 +236,9 @@ public class Main {
                         System.out.print("Frequence (en jours) : ");
                         int frequence = Integer.parseInt(scanner.nextLine());
 
-                        calendar.ajouterEvent(Constantes.PERIODIQUE, titre3, utilisateur,
-                                LocalDateTime.of(annee3, moisRdv3, jourRdv3, heure3, minute3), 0,
-                                "", "", frequence);
+                        calendar.ajouterEvent(PERIODIQUE, new TitreEvenement(titre3), new ProprietaireEvenement(utilisateur),
+                                LocalDateTime.of(annee3, moisRdv3, jourRdv3, heure3, minute3), new DureeEvenement(0),
+                                new LieuEvenement(""), new ParticipantsEvenement(""), new FrequenceEvenement(frequence));
 
                         System.out.println("Événement ajouté.");
                         break;
@@ -237,6 +256,7 @@ public class Main {
             System.out.println("Aucun événement trouvé pour cette période.");
         } else {
             System.out.println("Événements trouvés : ");
+
             for (Event e : evenements) {
                 System.out.println("- " + e.description());
             }

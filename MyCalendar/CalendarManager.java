@@ -23,16 +23,8 @@ public class CalendarManager {
         this.events = new ArrayList<>();
     }
 
-    // TODO ajouterEvent(Event)
-    public void ajouterEvent(TypeEvenement type, TitreEvenement title, ProprietaireEvenement proprietaire,
-                             LocalDateTime dateDebut, DureeEvenement dureeMinutes, LieuEvenement lieu,
-                             ParticipantsEvenement participants, FrequenceEvenement frequenceJours) {
-        Event e = switch (type) {
-            case PERIODIQUE -> new EventPeriodique(title, proprietaire, dateDebut, dureeMinutes, frequenceJours);
-            case RDV_PERSONNEL -> new EventRendezVous(title, proprietaire, dateDebut, dureeMinutes);
-            case REUNION -> new EventReunion(title, proprietaire, dateDebut, dureeMinutes, lieu, participants);
-        };
-        events.add(e);
+    public void ajouterEvent(Event event) {
+        events.add(event);
     }
 
     public List<Event> eventsDansPeriode(LocalDateTime debut, LocalDateTime fin) {
